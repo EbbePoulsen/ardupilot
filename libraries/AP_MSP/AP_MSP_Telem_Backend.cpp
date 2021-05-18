@@ -819,7 +819,10 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_altitude(sbuf_t *dst)
     home_state_t home_state;
     update_home_pos(home_state);
 
-    sbuf_write_u32(dst, home_state.rel_altitude_cm);                // relative altitude cm
+    /* EDIT START */
+    //sbuf_write_u32(dst, home_state.rel_altitude_cm);                // relative altitude cm
+    sbuf_write_u32(dst, 7);                                         
+    /* EDIT END */
     sbuf_write_u16(dst, (int16_t)get_vspeed_ms() * 100);            // climb rate cm/s
     return MSP_RESULT_ACK;
 }
