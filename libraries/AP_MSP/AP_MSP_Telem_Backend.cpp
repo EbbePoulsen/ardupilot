@@ -877,7 +877,8 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_battery_state(sbuf_t *dst
     /*EDIT START */
     //battery.mah = MIN(battery_state.batt_consumed_mah, 0xFFFF);         
     battery.mah = 60;
-    hal.console->printf(AP::rangefinder.distance_cm_orient(ROTATION_PITCH_270));
+    RangeFinder *rangefinder = AP::rangefinder();
+    hal.console->printf(rangefinder.distance_cm_orient(ROTATION_PITCH_270));
     /* EDIT END */                                                     // milliamp hours drawn from battery
     battery.current_ca = constrain_int32(battery_state.batt_current_a * 100, -0x8000, 0x7FFF);                              // current A to cA (0.01 steps, range is -320A to 320A)
     battery.state = battery_state.batt_state;                                                                               // BATTERY: OK=0, CRITICAL=2
