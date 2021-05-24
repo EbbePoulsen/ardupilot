@@ -875,9 +875,10 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_battery_state(sbuf_t *dst
     battery.capacity_mah = battery_state.batt_capacity_mah;                                                                          // in mAh
     battery.voltage_dv = constrain_int16(battery_state.batt_voltage_v * 10, 0, 255);                                        // battery voltage V to dV
     /*EDIT START */
-    //battery.mah = MIN(battery_state.batt_consumed_mah, 0xFFFF);         
+    //battery.mah = MIN(battery_state.batt_consumed_mah, 0xFFFF);   
+    RangeFinder *rangefinder = AP::rangefinder();      
     battery.mah = rangefinder->distance_cm_orient(ROTATION_PITCH_270);
-    RangeFinder *rangefinder = AP::rangefinder();
+    
     //hal.console->printf(rangefinder->distance_cm_orient(ROTATION_PITCH_270));
     /* EDIT END */                                                     // milliamp hours drawn from battery
     battery.current_ca = constrain_int32(battery_state.batt_current_a * 100, -0x8000, 0x7FFF);                              // current A to cA (0.01 steps, range is -320A to 320A)
