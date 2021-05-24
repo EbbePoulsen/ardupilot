@@ -848,8 +848,12 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_analog(sbuf_t *dst)
     
     RangeFinder *rangefinder = AP::rangefinder();
     if (rangefinder != nullptr) {
-        battery.mah = rangefinder->distance_cm_orient(ROTATION_PITCH_270);
+        battery.mah = 1;
+        //battery.mah = rangefinder->distance_cm_orient(ROTATION_PITCH_270);
+    } else {
+        battery.mah = 2;
     }
+
     /* EDIT END */
     battery.rssi = rssi->enabled() ? rssi->read_receiver_rssi() * 1023 : 0;                     // rssi 0-1 to 0-1023
     battery.current_ca = constrain_int32(battery_state.batt_current_a * 100, -0x8000, 0x7FFF);  // current A to cA (0.01 steps, range is -320A to 320A)
