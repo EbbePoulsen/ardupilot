@@ -846,13 +846,13 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_analog(sbuf_t *dst)
     /* EDIT START */
     //battery.mah = constrain_int32(battery_state.batt_consumed_mah, 0, 0xFFFF);                  // milliamp hours drawn from battery
     
-    RangeFinder *rangefinder = AP::rangefinder();
-    if (rangefinder != nullptr) {
+    //RangeFinder *rangefinder = AP::rangefinder();
+    //if (rangefinder != nullptr) {
         battery.mah = 1;
         //battery.mah = rangefinder->distance_cm_orient(ROTATION_PITCH_270);
-    } else {
+    //} else {
         battery.mah = 2;
-    }
+    //}
 
     /* EDIT END */
     battery.rssi = rssi->enabled() ? rssi->read_receiver_rssi() * 1023 : 0;                     // rssi 0-1 to 0-1023
