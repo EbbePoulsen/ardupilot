@@ -851,7 +851,7 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_analog(sbuf_t *dst)
         //battery.mah = 1;
         //battery.mah = rangefinder->distance_cm_orient(ROTATION_PITCH_270);
     //} else {
-        battery.mah = 2;
+        battery.mah = 60;
     //}
 
     /* EDIT END */
