@@ -901,7 +901,9 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_esc_sensor_data(sbuf_t *d
         }
     }
 #endif*/
+    sbuf_write_u8(dst, 4);
     sbuf_write_u8(dst, 60);
+    sbuf_write_u16(dst, uint16_t(1000));
     /* EDIT END */
     return MSP_RESULT_ACK;
 }
