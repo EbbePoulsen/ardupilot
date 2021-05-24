@@ -874,10 +874,7 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_battery_state(sbuf_t *dst
     battery.cellcount = constrain_int16((msp->_cellcount > 0 ? msp->_cellcount : battery_state.batt_cellcount), 0, 255);    // cell count 0 indicates battery not detected.
     battery.capacity_mah = battery_state.batt_capacity_mah;                                                                          // in mAh
     battery.voltage_dv = constrain_int16(battery_state.batt_voltage_v * 10, 0, 255);                                        // battery voltage V to dV
-    /*EDIT START */
-    //battery.mah = MIN(battery_state.batt_consumed_mah, 0xFFFF);         
-    battery.mah = 123;
-    /* EDIT END */                                                     // milliamp hours drawn from battery
+    battery.mah = MIN(battery_state.batt_consumed_mah, 0xFFFF);                                                             // milliamp hours drawn from battery
     battery.current_ca = constrain_int32(battery_state.batt_current_a * 100, -0x8000, 0x7FFF);                              // current A to cA (0.01 steps, range is -320A to 320A)
     battery.state = battery_state.batt_state;                                                                               // BATTERY: OK=0, CRITICAL=2
     battery.voltage_cv = constrain_int32(battery_state.batt_voltage_v * 100, 0, 0x7FFF);                                    // battery voltage in 0.01V steps
@@ -888,7 +885,8 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_battery_state(sbuf_t *dst
 
 MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_esc_sensor_data(sbuf_t *dst)
 {
-#if HAL_WITH_ESC_TELEM
+    /* EDIT START */
+/*#if HAL_WITH_ESC_TELEM
     AP_ESC_Telem& telem = AP::esc_telem();
     if (telem.get_last_telem_data_ms(0)) {
         const uint8_t num_motors = telem.get_num_active_escs();
@@ -902,7 +900,9 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_esc_sensor_data(sbuf_t *d
             sbuf_write_u16(dst, uint16_t(rpm * 0.1));
         }
     }
-#endif
+#endif*/
+    sbuf_write_u8(dst, 60);
+    /* EDIT END */
     return MSP_RESULT_ACK;
 }
 
