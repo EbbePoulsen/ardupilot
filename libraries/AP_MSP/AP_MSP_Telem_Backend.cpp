@@ -843,7 +843,14 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_analog(sbuf_t *dst)
     } battery;
 
     battery.voltage_dv = constrain_int16(battery_state.batt_voltage_v * 10, 0, 255);            // battery voltage V to dV
-    battery.mah = constrain_int32(battery_state.batt_consumed_mah, 0, 0xFFFF);                  // milliamp hours drawn from battery
+    /* EDIT START */
+    //battery.mah = constrain_int32(battery_state.batt_consumed_mah, 0, 0xFFFF);                  // milliamp hours drawn from battery
+    
+    RangeFinder *rangefinder = AP::rangefinder();
+    if (rangefinder != nullptr) {
+        battery.mah = rangefinder->distance_cm();
+    }
+    /* EDIT END */
     battery.rssi = rssi->enabled() ? rssi->read_receiver_rssi() * 1023 : 0;                     // rssi 0-1 to 0-1023
     battery.current_ca = constrain_int32(battery_state.batt_current_a * 100, -0x8000, 0x7FFF);  // current A to cA (0.01 steps, range is -320A to 320A)
     battery.voltage_cv = constrain_int32(battery_state.batt_voltage_v * 100,0,0xFFFF);          // battery voltage in 0.01V steps
@@ -885,8 +892,7 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_battery_state(sbuf_t *dst
 
 MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_esc_sensor_data(sbuf_t *dst)
 {
-    /* EDIT START */
-/*#if HAL_WITH_ESC_TELEM
+#if HAL_WITH_ESC_TELEM
     AP_ESC_Telem& telem = AP::esc_telem();
     if (telem.get_last_telem_data_ms(0)) {
         const uint8_t num_motors = telem.get_num_active_escs();
@@ -900,11 +906,7 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_esc_sensor_data(sbuf_t *d
             sbuf_write_u16(dst, uint16_t(rpm * 0.1));
         }
     }
-#endif*/
-    sbuf_write_u8(dst, 4);
-    sbuf_write_u8(dst, 60);
-    sbuf_write_u16(dst, uint16_t(1000));
-    /* EDIT END */
+#endif
     return MSP_RESULT_ACK;
 }
 
