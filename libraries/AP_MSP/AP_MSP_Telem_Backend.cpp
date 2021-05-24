@@ -819,10 +819,8 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_altitude(sbuf_t *dst)
     home_state_t home_state;
     update_home_pos(home_state);
 
-    /* EDIT START */
-    //sbuf_write_u32(dst, home_state.rel_altitude_cm);                // relative altitude cm
-    sbuf_write_u32(dst, 7);                                         
-    /* EDIT END */
+    sbuf_write_u32(dst, home_state.rel_altitude_cm);                // relative altitude cm
+
     sbuf_write_u16(dst, (int16_t)get_vspeed_ms() * 100);            // climb rate cm/s
     return MSP_RESULT_ACK;
 }
@@ -876,7 +874,10 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_battery_state(sbuf_t *dst
     battery.cellcount = constrain_int16((msp->_cellcount > 0 ? msp->_cellcount : battery_state.batt_cellcount), 0, 255);    // cell count 0 indicates battery not detected.
     battery.capacity_mah = battery_state.batt_capacity_mah;                                                                          // in mAh
     battery.voltage_dv = constrain_int16(battery_state.batt_voltage_v * 10, 0, 255);                                        // battery voltage V to dV
-    battery.mah = MIN(battery_state.batt_consumed_mah, 0xFFFF);                                                             // milliamp hours drawn from battery
+    /*EDIT START */
+    //battery.mah = MIN(battery_state.batt_consumed_mah, 0xFFFF);         
+    battery.mah = 123;
+    /* EDIT END */                                                     // milliamp hours drawn from battery
     battery.current_ca = constrain_int32(battery_state.batt_current_a * 100, -0x8000, 0x7FFF);                              // current A to cA (0.01 steps, range is -320A to 320A)
     battery.state = battery_state.batt_state;                                                                               // BATTERY: OK=0, CRITICAL=2
     battery.voltage_cv = constrain_int32(battery_state.batt_voltage_v * 100, 0, 0x7FFF);                                    // battery voltage in 0.01V steps
