@@ -843,18 +843,7 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_analog(sbuf_t *dst)
     } battery;
 
     battery.voltage_dv = constrain_int16(battery_state.batt_voltage_v * 10, 0, 255);            // battery voltage V to dV
-    /* EDIT START */
-    //battery.mah = constrain_int32(battery_state.batt_consumed_mah, 0, 0xFFFF);                  // milliamp hours drawn from battery
-    
-    //RangeFinder *rangefinder = AP::rangefinder();
-    //if (rangefinder != nullptr) {
-        //battery.mah = 1;
-        //battery.mah = rangefinder->distance_cm_orient(ROTATION_PITCH_270);
-    //} else {
-        battery.mah = 60;
-    //}
-
-    /* EDIT END */
+    battery.mah = constrain_int32(battery_state.batt_consumed_mah, 0, 0xFFFF);                  // milliamp hours drawn from battery
     battery.rssi = rssi->enabled() ? rssi->read_receiver_rssi() * 1023 : 0;                     // rssi 0-1 to 0-1023
     battery.current_ca = constrain_int32(battery_state.batt_current_a * 100, -0x8000, 0x7FFF);  // current A to cA (0.01 steps, range is -320A to 320A)
     battery.voltage_cv = constrain_int32(battery_state.batt_voltage_v * 100,0,0xFFFF);          // battery voltage in 0.01V steps
@@ -885,7 +874,10 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_battery_state(sbuf_t *dst
     battery.cellcount = constrain_int16((msp->_cellcount > 0 ? msp->_cellcount : battery_state.batt_cellcount), 0, 255);    // cell count 0 indicates battery not detected.
     battery.capacity_mah = battery_state.batt_capacity_mah;                                                                          // in mAh
     battery.voltage_dv = constrain_int16(battery_state.batt_voltage_v * 10, 0, 255);                                        // battery voltage V to dV
-    battery.mah = MIN(battery_state.batt_consumed_mah, 0xFFFF);                                                             // milliamp hours drawn from battery
+    /*EDIT START */
+    //battery.mah = MIN(battery_state.batt_consumed_mah, 0xFFFF);         
+    battery.mah = 123;
+    /* EDIT END */                                                     // milliamp hours drawn from battery
     battery.current_ca = constrain_int32(battery_state.batt_current_a * 100, -0x8000, 0x7FFF);                              // current A to cA (0.01 steps, range is -320A to 320A)
     battery.state = battery_state.batt_state;                                                                               // BATTERY: OK=0, CRITICAL=2
     battery.voltage_cv = constrain_int32(battery_state.batt_voltage_v * 100, 0, 0x7FFF);                                    // battery voltage in 0.01V steps
