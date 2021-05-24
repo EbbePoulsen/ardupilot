@@ -848,7 +848,7 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_out_analog(sbuf_t *dst)
     
     RangeFinder *rangefinder = AP::rangefinder();
     if (rangefinder != nullptr) {
-        battery.mah = rangefinder->distance_cm();
+        battery.mah = rangefinder->ground_clearance_cm_orient(ROTATION_PITCH_270);
     }
     /* EDIT END */
     battery.rssi = rssi->enabled() ? rssi->read_receiver_rssi() * 1023 : 0;                     // rssi 0-1 to 0-1023
